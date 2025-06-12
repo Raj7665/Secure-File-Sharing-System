@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+    <h2>Share File: {{ file.original_filename }}</h2>
+
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        <div>
+            {{ form.recipient_username.label }}<br>
+            {{ form.recipient_username() }}
+            {% if form.recipient_username.errors %}
+                <ul class="errors">
+                    {% for error in form.recipient_username.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+        <div>
+            {{ form.submit() }}
+        </div>
+    </form>
+
+    {% if already_shared_with %}
+        <h3>Already Shared With:</h3>
+        <ul>
+            {% for user in already_shared_with %}
+                <li>{{ user.username }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    {% if file.is_shared and file.share_link %}
+        <h3>Public Share Link:</h3>
+        <p><a href="{{ url_for('access_shared_file', share_link=file.share_link) }}">{{ url_for('access_shared_file', share_link=file.share_link, _external=True) }}</a></p>
+    {% endif %}
+
+{% endblock content %}
